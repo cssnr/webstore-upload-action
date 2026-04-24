@@ -1,0 +1,36 @@
+# https://www.schemastore.org/github-action.json
+name: "Web Store Upload"
+description: "Upload and Publish Web Extensions to the Google Chrome Web Store v2 using Service Account Credentials, JSON, or Token."
+author: "Shane"
+
+branding:
+  icon: "play-circle"
+  color: "white"
+
+inputs:
+  extension_id:
+    description: "Chrome Extension ID"
+  publisher_id:
+    description: "Google Publisher ID"
+  zip_file:
+    description: "Chrome Extension ZIP File"
+  submit:
+    description: "Submit Extension for Publishing"
+    default: "false"
+  json_data:
+    description: "JSON String Data"
+  json_file:
+    description: "Path to JSON File"
+  client_email:
+    description: "Service Account Client Email"
+  private_key:
+    description: "Service Account Private Key"
+  token:
+    description: "Generated Bearer Token"
+  summary:
+    description: "Add Summary to Job"
+    default: "true"
+
+runs:
+  using: "node24"
+  main: "dist/index.js"

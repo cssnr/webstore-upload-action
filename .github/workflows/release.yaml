@@ -1,0 +1,46 @@
+name: "Release"
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  release:
+    name: "Release"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: "Update Tags"
+        id: tags
+        uses: cssnr/update-version-tags-action@v2
+        with:
+          tags: "latest"
+
+      - name: "Debug Tags"
+        continue-on-error: true
+        run: |
+          echo "github.ref_name: ${{ github.ref_name }}"
+          echo "steps.tags.outputs.tags: ${{ steps.tags.outputs.tags }}"
+
+      - name: "Update Release Notes Action"
+        continue-on-error: true
+        uses: smashedr/update-release-notes-action@master
+        with:
+          location: "tail"
+          actions: |
+            tags: ${{ steps.tags.outputs.tags }}
+
+      - name: "Package Changelog Action"
+        continue-on-error: true
+        uses: cssnr/package-changelog-action@v2
+
+      - name: "Send Failure Notification"
+        if: ${{ failure() }}
+        uses: sarisia/actions-status-discord@eb045afee445dc055c18d3d90bd0f244fd062708 # v1.16.0
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          description: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

@@ -1,0 +1,75 @@
+name: "Test"
+
+# actions-up-ignore-file
+
+on:
+  workflow_dispatch:
+  #schedule:
+  #  - cron: "18 18 * * 1,3,5"
+  #push:
+  #  branches-ignore: [master]
+  #  paths:
+  #    - ".github/workflows/test.yaml"
+  #    - "dist/**"
+  #    - "src/**"
+  #    - "package*.json"
+  #    - "requirements*.txt"
+  #    - "action.yml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: "Test"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v6
+
+      - name: "Debug event.json"
+        if: ${{ !github.event.act }}
+        continue-on-error: true
+        run: cat "${GITHUB_EVENT_PATH}"
+      - name: "Debug CTX github"
+        if: ${{ !github.event.act }}
+        continue-on-error: true
+        env:
+          GITHUB_CTX: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CTX"
+      - name: "Debug Environment"
+        if: ${{ !github.event.act }}
+        continue-on-error: true
+        run: env
+
+      - name: "Test Local Action"
+        id: test
+        uses: ./
+        with:
+          extension_id: ipliinigkdddaaeaoncoljmdaoabgjdo
+          publisher_id: 428868da-c02f-433a-b34c-208b3d01fbc3
+          zip_file: chrome.zip
+          submit: false
+          #json_file: secret.json
+          #json_data: |
+          #  {"client_email": "ralf", "private_key": "brok it"}
+          #token:
+          summary: ${{ !github.event.act }}
+
+      #- name: "Validate Outputs"
+      #  if: ${{ !github.event.act }}
+      #  uses: cssnr/validate-outputs-action@master
+      #  with:
+      #    outputs: ${{ toJSON(steps.test.outputs) }}
+      #    data: |
+      #      sha: ${{ github.sha }}
+
+      - name: "Schedule Failure Notification"
+        if: ${{ failure() && github.event_name == 'schedule' }}
+        uses: sarisia/actions-status-discord@b8381b25576cb341b2af39926ab42c5056cc44ed # v1.15.5
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          description: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
