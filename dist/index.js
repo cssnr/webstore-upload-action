@@ -72329,7 +72329,7 @@ if (!globalThis.fetch)
 const inputs = {
     extID: getInput('extension_id', { required: true }),
     pubID: getInput('publisher_id', { required: true }),
-    zipFile: getInput('zip_file', { required: true }),
+    zipFile: getInput('zip_file'),
     submit: getBooleanInput('submit'),
     jsonData: getInput('json_data'),
     jsonFile: getInput('json_file'),
@@ -72342,10 +72342,13 @@ async function main() {
     const version = process.env.GITHUB_ACTION_REF
         ? `\u001b[35;1m${process.env.GITHUB_ACTION_REF}`
         : '\u001b[33;1mSource';
-    info(`🏳️ Starting Web Store Upload Action - ${version}`);
+    info(`🏳️ Starting Web Store Publish Action - ${version}`);
     startGroup('Inputs');
     console.log(inputs);
     endGroup();
+    if (!inputs.zipFile && !inputs.submit) {
+        return setFailed('You must provide a zip file or submit an extension.');
+    }
     if (inputs.zipFile && !existsSync(inputs.zipFile)) {
         return setFailed(`Unable to locate zip file: ${inputs.zipFile}`);
     }
@@ -72354,11 +72357,17 @@ async function main() {
         return setFailed('Unable to get Access Token.');
     }
     const api = new Webstore(inputs.pubID, inputs.extID, token);
-    const file = readFileSync(inputs.zipFile);
-    const upload = await api.uploadFile(file);
-    startGroup('Upload');
-    console.log(upload);
-    endGroup();
+    let upload;
+    if (inputs.zipFile) {
+        const file = readFileSync(inputs.zipFile);
+        upload = await api.uploadFile(file);
+        startGroup('Upload');
+        console.log(upload);
+        endGroup();
+    }
+    else {
+        info('Skipping Extension Upload...');
+    }
     let publish;
     if (inputs.submit) {
         publish = await api.publishExtension();
@@ -72397,7 +72406,7 @@ async function getToken(inputs) {
     console.log('email:', email.slice(16));
     console.log('key:', key.slice(0, 27));
     if (!email || !key) {
-        throw new Error('You must provide the JSON or both key/email.');
+        throw new Error('You must provide the credentials JSON or both key/email.');
     }
     const scopes = ['https://www.googleapis.com/auth/chromewebstore'];
     const client = new srcExports.JWT({ email, key, scopes });
@@ -72410,14 +72419,14 @@ async function addSummary(inputs, upload, publish) {
     const itemUrl = `https://chromewebstore.google.com/detail/${inputs.extID}`;
     const packageUrl = `https://chrome.google.com/webstore/devconsole/${inputs.pubID}/${inputs.extID}/edit/package`;
     const downloadUrl = `https://chrome.google.com/webstore/download/${inputs.extID}/revision/__DRAFT/package/main/crx/3`;
-    summary.addRaw('## Web Store Upload Action\n\n');
-    summary.addRaw(`Uploaded Extension [${inputs.extID}](${itemUrl}) to the [Developer Console](${packageUrl}).\n\n`);
+    summary.addRaw('## Web Store Publish Action\n\n');
+    summary.addRaw(`Publishing Extension [${inputs.extID}](${itemUrl}) to the [Developer Console](${packageUrl}).\n\n`);
     if (upload) {
         summary.addRaw(`\n\n:globe_with_meridians: Successfully Uploaded Extension.\n\n`);
         summary.addCodeBlock(JSON.stringify(upload, null, 2), 'json');
     }
     if (publish) {
-        summary.addRaw(`\n\n:globe_with_meridians: Successfully Submitted Extension.\n\n`);
+        summary.addRaw(`\n\n:rocket: Successfully Submitted Extension.\n\n`);
         summary.addCodeBlock(JSON.stringify(publish, null, 2), 'json');
     }
     summary.addRaw('\n<details><summary>Details</summary>');
@@ -72443,7 +72452,7 @@ async function addSummary(inputs, upload, publish) {
     summary.addCodeBlock(yaml, 'yaml');
     summary.addRaw('</details>\n');
     const text = 'View Documentation, Report Issues or Request Features';
-    const link = 'https://github.com/cssnr/webstore-upload-action';
+    const link = 'https://github.com/cssnr/webstore-publish-action';
     summary.addRaw(`\n[${text}](${link}?tab=readme-ov-file#readme)\n\n---`);
     await summary.write();
 }

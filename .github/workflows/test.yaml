@@ -51,9 +51,9 @@ jobs:
         with:
           extension_id: ipliinigkdddaaeaoncoljmdaoabgjdo
           publisher_id: 428868da-c02f-433a-b34c-208b3d01fbc3
-          zip_file: chrome.zip
-          submit: false
-          #json_file: secret.json
+          submit: true
+          #zip_file: chrome.zip
+          json_file: secret.json
           #json_data: |
           #  {"client_email": "ralf", "private_key": "brok it"}
           #token:

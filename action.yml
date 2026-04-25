@@ -1,6 +1,6 @@
 # https://www.schemastore.org/github-action.json
-name: "Web Store Upload"
-description: "Upload and Publish Web Extensions to the Google Chrome Web Store v2 using Service Account Credentials, JSON, or Token."
+name: "Web Store Publish"
+description: "Upload and/or Publish Web Extensions to the Google Chrome Web Store v2 using Service Account Credentials, JSON, or Token."
 author: "Shane"
 
 branding:
@@ -10,8 +10,10 @@ branding:
 inputs:
   extension_id:
     description: "Chrome Extension ID"
+    required: true
   publisher_id:
     description: "Google Publisher ID"
+    required: true
   zip_file:
     description: "Chrome Extension ZIP File"
   submit:
