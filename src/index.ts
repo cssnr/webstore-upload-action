@@ -11,8 +11,8 @@ import { Webstore } from './webstore.js'
 const inputs = {
   extID: core.getInput('extension_id', { required: true }),
   pubID: core.getInput('publisher_id', { required: true }),
-  zipFile: core.getInput('zip_file', { required: true }),
 
+  zipFile: core.getInput('zip_file'),
   submit: core.getBooleanInput('submit'),
 
   jsonData: core.getInput('json_data'),
@@ -28,11 +28,11 @@ const inputs = {
 
 type Inputs = typeof inputs
 
-async function main() {
+async function main() /* NOSONAR */ {
   const version: string = process.env.GITHUB_ACTION_REF
     ? `\u001b[35;1m${process.env.GITHUB_ACTION_REF}`
     : '\u001b[33;1mSource'
-  core.info(`🏳️ Starting Web Store Upload Action - ${version}`)
+  core.info(`🏳️ Starting Web Store Publish Action - ${version}`)
 
   core.startGroup('Inputs')
   console.log(inputs)
@@ -54,28 +54,37 @@ async function main() {
   // const src = path.resolve(__dirname, '../src')
   // core.debug(`src: ${src}`)
 
-  // Inputs
+  // Setup
+  if (!inputs.zipFile && !inputs.submit) {
+    return core.setFailed('You must provide a zip file or submit an extension.')
+  }
   if (inputs.zipFile && !existsSync(inputs.zipFile)) {
     return core.setFailed(`Unable to locate zip file: ${inputs.zipFile}`)
   }
 
   const token = await getToken(inputs)
+  // console.log('token:', token)
   if (!token) {
     return core.setFailed('Unable to get Access Token.')
   }
-  // console.log('token:', token)
 
+  // Process
   const api = new Webstore(inputs.pubID, inputs.extID, token)
 
   // const extension = await api.getExtension()
   // console.log('extension:', extension)
   // console.log('extension JSON:', JSON.stringify(extension, null, 2))
 
-  const file = readFileSync(inputs.zipFile)
-  const upload = await api.uploadFile(file)
-  core.startGroup('Upload')
-  console.log(upload)
-  core.endGroup() // Upload
+  let upload
+  if (inputs.zipFile) {
+    const file = readFileSync(inputs.zipFile)
+    upload = await api.uploadFile(file)
+    core.startGroup('Upload')
+    console.log(upload)
+    core.endGroup() // Upload
+  } else {
+    core.info('Skipping Extension Upload...')
+  }
 
   let publish
   if (inputs.submit) {
@@ -116,7 +125,7 @@ async function getToken(inputs: Inputs) {
   console.log('email:', email.slice(16))
   console.log('key:', key.slice(0, 27))
   if (!email || !key) {
-    throw new Error('You must provide the JSON or both key/email.')
+    throw new Error('You must provide the credentials JSON or both key/email.')
   }
 
   // Token
@@ -134,9 +143,9 @@ async function addSummary(inputs: Inputs, upload: any, publish: any) {
   const packageUrl = `https://chrome.google.com/webstore/devconsole/${inputs.pubID}/${inputs.extID}/edit/package`
   const downloadUrl = `https://chrome.google.com/webstore/download/${inputs.extID}/revision/__DRAFT/package/main/crx/3`
 
-  core.summary.addRaw('## Web Store Upload Action\n\n')
+  core.summary.addRaw('## Web Store Publish Action\n\n')
   core.summary.addRaw(
-    `Uploaded Extension [${inputs.extID}](${itemUrl}) to the [Developer Console](${packageUrl}).\n\n`,
+    `Publishing Extension [${inputs.extID}](${itemUrl}) to the [Developer Console](${packageUrl}).\n\n`,
   )
 
   if (upload) {
@@ -144,9 +153,7 @@ async function addSummary(inputs: Inputs, upload: any, publish: any) {
     core.summary.addCodeBlock(JSON.stringify(upload, null, 2), 'json')
   }
   if (publish) {
-    core.summary.addRaw(
-      `\n\n:globe_with_meridians: Successfully Submitted Extension.\n\n`,
-    )
+    core.summary.addRaw(`\n\n:rocket: Successfully Submitted Extension.\n\n`)
     core.summary.addCodeBlock(JSON.stringify(publish, null, 2), 'json')
   }
 
@@ -177,7 +184,7 @@ async function addSummary(inputs: Inputs, upload: any, publish: any) {
   core.summary.addRaw('</details>\n')
 
   const text = 'View Documentation, Report Issues or Request Features'
-  const link = 'https://github.com/cssnr/webstore-upload-action'
+  const link = 'https://github.com/cssnr/webstore-publish-action'
   core.summary.addRaw(`\n[${text}](${link}?tab=readme-ov-file#readme)\n\n---`)
   await core.summary.write()
 }

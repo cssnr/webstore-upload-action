@@ -1,5 +1,5 @@
 {
-  "name": "webstore-upload-action",
+  "name": "webstore-publish-action",
   "private": true,
   "type": "module",
   "main": "dist/index.js",
