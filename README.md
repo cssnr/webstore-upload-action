@@ -58,7 +58,10 @@ Upload and/or Publish Web Extensions to the Google Chrome Web Store v2 using Ser
 2. Download the Service Account JSON file.
 3. Open the file and copy the contents.
 4. Add the contents as the value to a GitHub Secret.
-5. Set the `json` input to the secret.
+   - Recommended to minify the JSON: `cat credentials.json | jq -c`
+5. Set the `json_data` input to the secret.
+
+For more details see the [Examples](#Examples).
 
 To get your Publisher ID, see these instructions:
 
@@ -67,7 +70,7 @@ To get your Publisher ID, see these instructions:
 ## Inputs
 
 > [!TIP]  
-> Only provide `json` OR `file` OR `client_email`/`private_key` OR `token`
+> Only provide `json_data` OR `json_file` OR `client_email`/`private_key` OR `token`
 
 | Input                         |  Req.   | Default | Input&nbsp;Description       |
 | :---------------------------- | :-----: | :-----: | :--------------------------- |
@@ -96,8 +99,8 @@ You can get the Publisher ID from the Developer Dashboard.
 
 #### zip_file
 
-This is the path to your extension archive to the Web Store.  
-Omit this to skip uploading.
+This is the path to your extension archive zip file.  
+Omit this to skip uploading to [submit](#submit) only.
 
 #### submit
 
