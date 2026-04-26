@@ -3,7 +3,6 @@
 [![GitHub Release Version](https://img.shields.io/github/v/release/cssnr/webstore-publish-action?logo=git&logoColor=white&labelColor=585858&label=%20)](https://github.com/cssnr/webstore-publish-action/releases/latest)
 [![GitHub Dist Size](https://img.shields.io/github/size/cssnr/webstore-publish-action/dist%2Findex.js?logo=bookstack&logoColor=white&label=dist%20size)](https://github.com/cssnr/webstore-publish-action/blob/master/src)
 [![Workflow Release](https://img.shields.io/github/actions/workflow/status/cssnr/webstore-publish-action/release.yaml?logo=norton&logoColor=white&label=release)](https://github.com/cssnr/webstore-publish-action/actions/workflows/release.yaml)
-[![Workflow Test](https://img.shields.io/github/actions/workflow/status/cssnr/webstore-publish-action/test.yaml?logo=norton&logoColor=white&label=test)](https://github.com/cssnr/webstore-publish-action/actions/workflows/test.yaml)
 [![Workflow Lint](https://img.shields.io/github/actions/workflow/status/cssnr/webstore-publish-action/lint.yaml?logo=norton&logoColor=white&label=lint)](https://github.com/cssnr/webstore-publish-action/actions/workflows/lint.yaml)
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/cssnr/webstore-publish-action?logo=github&label=updated)](https://github.com/cssnr/webstore-publish-action)
 [![Codeberg Last Commit](https://img.shields.io/gitea/last-commit/cssnr/webstore-publish-action/master?gitea_url=https%3A%2F%2Fcodeberg.org%2F&logo=codeberg&logoColor=white&label=updated)](https://codeberg.org/cssnr/webstore-publish-action)
@@ -24,7 +23,7 @@
 <img alt="Web Store Publish Action" align="right" width="128" height="auto" src="https://raw.githubusercontent.com/cssnr/webstore-publish-action/refs/heads/master/.github/assets/logo.svg"></a>
 
 - [Features](#Features)
-- [Steps](#Steps)
+- [Setup](#Setup)
 - [Inputs](#Inputs)
 - [Examples](#Examples)
 - [Tags](#Tags)
@@ -44,6 +43,8 @@ Upload and/or Publish Web Extensions to the Google Chrome Web Store v2 using Ser
     json_data: ${{ secrets.WEBSTORE_JSON }}
 ```
 
+For additional ways to provide authentication, see the [Inputs](#Inputs) or [Examples](#Examples).
+
 ## Features
 
 - Upload, Publish, or Both
@@ -51,14 +52,26 @@ Upload and/or Publish Web Extensions to the Google Chrome Web Store v2 using Ser
 - Provide JSON Data, File, Credentials or Token
 - Uses the Google Chrome [Web Store API v2](https://developer.chrome.com/docs/webstore/api/reference/rest)
 
-## Steps
+### Upcoming
+
+- Add Outputs for upload and submit responses
+- Add Outputs for download, dashboard, and item URLs.
+
+The API also allows getting the status, cancelling a submission and changing deploy percentage.
+These features can **easily** be added [on request](https://github.com/cssnr/webstore-publish-action/issues/new?template=1-feature.yaml).
+
+> If you want to see one of these features, or another one,
+> please [submit a feature request](https://github.com/cssnr/webstore-publish-action/issues/new?template=1-feature.yaml).
+
+## Setup
 
 1. Follow all the steps on this page only:
    - <https://developer.chrome.com/docs/webstore/service-accounts>
 2. Download the Service Account JSON file.
 3. Open the file and copy the contents.
 4. Add the contents as the value to a GitHub Secret.
-5. Set the `json` input to the secret.
+   - Recommended to minify the JSON: `cat credentials.json | jq -c`
+5. Set the `json_data` input to the secret (see the [Examples](#Examples)).
 
 To get your Publisher ID, see these instructions:
 
@@ -67,7 +80,7 @@ To get your Publisher ID, see these instructions:
 ## Inputs
 
 > [!TIP]  
-> Only provide `json` OR `file` OR `client_email`/`private_key` OR `token`
+> Only provide `json_data` **OR** `json_file` **OR** `client_email`/`private_key` **OR** `token`
 
 | Input                         |  Req.   | Default | Input&nbsp;Description       |
 | :---------------------------- | :-----: | :-----: | :--------------------------- |
@@ -82,11 +95,11 @@ To get your Publisher ID, see these instructions:
 | **token**                     |    -    |    -    | Generated Bearer Token       |
 | **summary**                   |    -    | `true`  | Add Summary to Job           |
 
-There are 4 ways to provide authentication.
-Either provide the service account credentials JSON data (as a string),
-a path to the JSON file, or the `client_email` and `private_key` from the JSON file.
+There are 4 ways to provide authentication.  
+Either provide the service account credentials JSON `json_data` (as a string),
+a path to the JSON `json_file`, or the `client_email` and `private_key` from the JSON file.
 
-Alternatively, if you have already generated a Bearer Token, you can provide only that.
+Alternatively, if you have already generated a Bearer Token, you can provide the `token` only.
 
 #### publisher_id
 
@@ -96,8 +109,8 @@ You can get the Publisher ID from the Developer Dashboard.
 
 #### zip_file
 
-This is the path to your extension archive to the Web Store.  
-Omit this to skip uploading.
+This is the path to your extension archive zip file.  
+Omit this to skip uploading to [submit](#submit) only.
 
 #### submit
 
@@ -157,6 +170,9 @@ If you already generated a bearer token.
     submit: true # submits extension for publishing
     token: ${{ env.BEARER_TOKEN }}
 ```
+
+For more examples, you can check out other projects using this action:  
+https://github.com/cssnr/webstore-publish-action/network/dependents
 
 ## Tags
 
