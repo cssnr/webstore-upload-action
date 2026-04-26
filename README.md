@@ -57,7 +57,8 @@ For additional ways to provide authentication, see the [Inputs](#Inputs) or [Exa
 - Add Outputs for upload and submit responses
 - Add Outputs for download, dashboard, and item URLs.
 
-Note: The API also allows getting the status, cancelling a submission and changing deploy percentage.
+The API also allows getting the status, cancelling a submission and changing deploy percentage.
+These features can **easily** be added [on request](https://github.com/cssnr/webstore-publish-action/issues/new?template=1-feature.yaml).
 
 > If you want to see one of these features, or another one,
 > please [submit a feature request](https://github.com/cssnr/webstore-publish-action/issues/new?template=1-feature.yaml).
