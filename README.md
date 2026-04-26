@@ -171,6 +171,9 @@ If you already generated a bearer token.
     token: ${{ env.BEARER_TOKEN }}
 ```
 
+For more examples, you can check out other projects using this action:  
+https://github.com/cssnr/webstore-publish-action/network/dependents
+
 ## Tags
 
 The following rolling [tags](https://github.com/cssnr/webstore-publish-action/tags) are maintained.
