@@ -51,6 +51,16 @@ Upload and/or Publish Web Extensions to the Google Chrome Web Store v2 using Ser
 - Provide JSON Data, File, Credentials or Token
 - Uses the Google Chrome [Web Store API v2](https://developer.chrome.com/docs/webstore/api/reference/rest)
 
+### Upcoming
+
+- Add Outputs for upload and submit responses
+- Add Outputs for download, dashboard, and item URLs.
+
+Note: The API also allows getting the status, cancelling a submission and changing deploy percentage.
+
+> If you want to see one of these features, or another one,
+> please [submit a feature request](https://github.com/cssnr/webstore-publish-action/issues/new?template=1-feature.yaml).
+
 ## Steps
 
 1. Follow all the steps on this page only:
@@ -59,9 +69,7 @@ Upload and/or Publish Web Extensions to the Google Chrome Web Store v2 using Ser
 3. Open the file and copy the contents.
 4. Add the contents as the value to a GitHub Secret.
    - Recommended to minify the JSON: `cat credentials.json | jq -c`
-5. Set the `json_data` input to the secret.
-
-For more details see the [Examples](#Examples).
+5. Set the `json_data` input to the secret (see the [Examples](#Examples)).
 
 To get your Publisher ID, see these instructions:
 
@@ -70,7 +78,7 @@ To get your Publisher ID, see these instructions:
 ## Inputs
 
 > [!TIP]  
-> Only provide `json_data` OR `json_file` OR `client_email`/`private_key` OR `token`
+> Only provide `json_data` **OR** `json_file` **OR** `client_email`/`private_key` **OR** `token`
 
 | Input                         |  Req.   | Default | Input&nbsp;Description       |
 | :---------------------------- | :-----: | :-----: | :--------------------------- |
@@ -85,11 +93,11 @@ To get your Publisher ID, see these instructions:
 | **token**                     |    -    |    -    | Generated Bearer Token       |
 | **summary**                   |    -    | `true`  | Add Summary to Job           |
 
-There are 4 ways to provide authentication.
-Either provide the service account credentials JSON data (as a string),
-a path to the JSON file, or the `client_email` and `private_key` from the JSON file.
+There are 4 ways to provide authentication.  
+Either provide the service account credentials JSON `json_data` (as a string),
+a path to the JSON `json_file`, or the `client_email` and `private_key` from the JSON file.
 
-Alternatively, if you have already generated a Bearer Token, you can provide only that.
+Alternatively, if you have already generated a Bearer Token, you can provide the `token` only.
 
 #### publisher_id
 
