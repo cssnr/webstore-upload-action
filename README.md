@@ -24,7 +24,7 @@
 <img alt="Web Store Publish Action" align="right" width="128" height="auto" src="https://raw.githubusercontent.com/cssnr/webstore-publish-action/refs/heads/master/.github/assets/logo.svg"></a>
 
 - [Features](#Features)
-- [Steps](#Steps)
+- [Setup](#Setup)
 - [Inputs](#Inputs)
 - [Examples](#Examples)
 - [Tags](#Tags)
@@ -44,6 +44,8 @@ Upload and/or Publish Web Extensions to the Google Chrome Web Store v2 using Ser
     json_data: ${{ secrets.WEBSTORE_JSON }}
 ```
 
+For additional ways to provide authentication, see the [Inputs](#Inputs) or [Examples](#Examples).
+
 ## Features
 
 - Upload, Publish, or Both
@@ -61,7 +63,7 @@ Note: The API also allows getting the status, cancelling a submission and changi
 > If you want to see one of these features, or another one,
 > please [submit a feature request](https://github.com/cssnr/webstore-publish-action/issues/new?template=1-feature.yaml).
 
-## Steps
+## Setup
 
 1. Follow all the steps on this page only:
    - <https://developer.chrome.com/docs/webstore/service-accounts>
