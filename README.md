@@ -3,7 +3,6 @@
 [![GitHub Release Version](https://img.shields.io/github/v/release/cssnr/webstore-publish-action?logo=git&logoColor=white&labelColor=585858&label=%20)](https://github.com/cssnr/webstore-publish-action/releases/latest)
 [![GitHub Dist Size](https://img.shields.io/github/size/cssnr/webstore-publish-action/dist%2Findex.js?logo=bookstack&logoColor=white&label=dist%20size)](https://github.com/cssnr/webstore-publish-action/blob/master/src)
 [![Workflow Release](https://img.shields.io/github/actions/workflow/status/cssnr/webstore-publish-action/release.yaml?logo=norton&logoColor=white&label=release)](https://github.com/cssnr/webstore-publish-action/actions/workflows/release.yaml)
-[![Workflow Test](https://img.shields.io/github/actions/workflow/status/cssnr/webstore-publish-action/test.yaml?logo=norton&logoColor=white&label=test)](https://github.com/cssnr/webstore-publish-action/actions/workflows/test.yaml)
 [![Workflow Lint](https://img.shields.io/github/actions/workflow/status/cssnr/webstore-publish-action/lint.yaml?logo=norton&logoColor=white&label=lint)](https://github.com/cssnr/webstore-publish-action/actions/workflows/lint.yaml)
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/cssnr/webstore-publish-action?logo=github&label=updated)](https://github.com/cssnr/webstore-publish-action)
 [![Codeberg Last Commit](https://img.shields.io/gitea/last-commit/cssnr/webstore-publish-action/master?gitea_url=https%3A%2F%2Fcodeberg.org%2F&logo=codeberg&logoColor=white&label=updated)](https://codeberg.org/cssnr/webstore-publish-action)
