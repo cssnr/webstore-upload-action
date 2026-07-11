@@ -95,6 +95,7 @@ To get your Publisher ID, see these instructions:
 | **percentage**                |    -    |  `100`  | Deploy Percentage            |
 | **skip_review**               |    -    | `false` | For `declarativeNetRequest`  |
 | [status](#status)             |    -    | `false` | Check Extension Status       |
+| **cancel**                    |    -    | `false` | Cancel Active Submission     |
 | **json_data**                 |    -    |    -    | Service Account JSON Data    |
 | **json_file**                 |    -    |    -    | Service Account JSON File    |
 | **client_email**              |    -    |    -    | Service Account Client Email |

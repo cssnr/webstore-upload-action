@@ -31,6 +31,9 @@ inputs:
   status:
     description: "Get the Extension Status"
     default: "false"
+  cancel:
+    description: "Cancel Active Submission"
+    default: "false"
   json_data:
     description: "JSON String Data"
   json_file:

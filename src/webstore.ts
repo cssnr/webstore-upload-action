@@ -46,4 +46,11 @@ export class Webstore {
     // console.log('response:', response)
     return response.data
   }
+
+  async cancelSubmission() {
+    const response = await this.client.post(
+      `/v2/publishers/${this.pubId}/items/${this.extId}:cancelSubmission`,
+    )
+    return response.data
+  }
 }
