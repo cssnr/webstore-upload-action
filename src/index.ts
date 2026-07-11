@@ -19,6 +19,7 @@ const inputs = {
   percentage: Number.parseInt(core.getInput('percentage')),
   skipReview: core.getBooleanInput('skip_review'),
   status: core.getBooleanInput('status'),
+  cancel: core.getBooleanInput('cancel'),
 
   jsonData: core.getInput('json_data'),
   jsonFile: core.getInput('json_file'),
@@ -66,8 +67,10 @@ async function main() /* NOSONAR */ {
   const submitPublish = publishMap[inputs.publish || String(inputs.submit)]
 
   // Setup
-  if (!inputs.zipFile && !submitPublish && !inputs.status) {
-    return core.setFailed('You must provide a zip file, submit extension or get status.')
+  if (!inputs.zipFile && !submitPublish && !inputs.status && !inputs.cancel) {
+    return core.setFailed(
+      'You must provide a zip file, submit extension, get status or cancel submission.',
+    )
   }
   let zipFile: string | undefined
   if (inputs.zipFile) {
@@ -88,6 +91,11 @@ async function main() /* NOSONAR */ {
 
   // Process
   const api = new Webstore(inputs.pubID, inputs.extID, token)
+
+  if (inputs.cancel) {
+    core.info(`Cancelling Active Submission: ${inputs.extID}`)
+    await api.cancelSubmission()
+  }
 
   let upload
   if (zipFile) {
